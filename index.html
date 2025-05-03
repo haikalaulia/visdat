@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualisasi Depresi</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="d3.v7.min.js"></script>
+</head>
+<body>
+  <h1>Visualisasi Data Depresi</h1>
+
+  <!-- 1. Gender vs Depresi -->
+  <section id="chart-gender-depression">
+    <h2>1. Apakah perempuan lebih rentan terhadap depresi dibandingkan laki-laki?</h2>
+    <p>Bar Chart Perbandingan Gender vs Status Depresi</p>
+    <svg id="gender-depression" width="700" height="400"></svg>
+    <script src="js/gender-depression.js"></script>
+  </section>
+
+  <!-- 2. Histogram Usia -->
+  <section id="chart-age-histogram">
+    <h2>2. Bagaimana distribusi usia antara individu yang mengalami depresi dan yang tidak?</h2>
+    <p>Histogram Usia Berdasarkan Status Depresi</p>
+    <svg id="age-histogram" width="700" height="400"></svg>
+    <script src="js/age-histogram.js"></script>
+  </section>
+
+  <!-- 3. Scatter Plot dan Heatmap (Pengeluaran vs Pendapatan) -->
+  <section id="chart-financial-correlation">
+    <h2>3. Apakah pengeluaran dan pendapatan memiliki korelasi terhadap tingkat depresi?</h2>
+    <p>Scatter Plot & Heatmap Korelasi</p>
+    <svg id="financial-correlation" width="700" height="400"></svg>
+    <script src="js/financial-correlation.js"></script>
+  </section>
+
+  <!-- 4. Stacked Bar Pendidikan dan Pernikahan -->
+  <section id="chart-socio-edu-marriage">
+    <h2>4. Apakah status menikah dan tingkat pendidikan memiliki dampak signifikan terhadap depresi?</h2>
+    <p>Stacked Bar Chart Pendidikan dan Pernikahan terhadap Depresi</p>
+    <svg id="socio-edu-marriage" width="700" height="400"></svg>
+    <script src="js/socio-edu-marriage.js"></script>
+  </section>
+
+  <!-- 5. Box Plot Jumlah Anak -->
+  <section id="chart-children-boxplot">
+    <h2>5. Apakah jumlah anak mempengaruhi tingkat depresi individu?</h2>
+    <p>Box Plot Jumlah Anak vs Status Depresi</p>
+    <svg id="children-boxplot" width="700" height="400"></svg>
+    <script src="js/children-boxplot.js"></script>
+  </section>
+
+  <!-- 6. Scatter Plot Utang dan Aset -->
+  <section id="chart-debt-assets">
+    <h2>6. Bagaimana hubungan antara jumlah utang dan aset terhadap kondisi depresi?</h2>
+    <p>Scatter Plot Utang dan Aset vs Depresi</p>
+    <svg id="debt-assets" width="700" height="400"></svg>
+    <script src="js/debt-assets.js"></script>
+  </section>
+
+  <!-- 7. Kekhawatiran terhadap Depresi -->
+  <section id="chart-worry-depression">
+    <h2>7. Apakah tingkat kekhawatiran terhadap depresi berkorelasi dengan status depresi?</h2>
+    <p>Bar Chart dan Heatmap Korelasi</p>
+    <svg id="worry-depression" width="700" height="400"></svg>
+    <script src="js/worry-depression.js"></script>
+  </section>
+
+</body>
+</html>
