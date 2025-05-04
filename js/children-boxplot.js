@@ -99,4 +99,52 @@ d3.csv("b_depressed.csv").then(data => {
       .attr("y2", d => y(d.median))
       .attr("stroke", "black")
       .style("width", 80);
+
+          // Judul
+    svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", -15)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .style("font-weight", "bold")
+    .text("Jumlah Anak Berdasarkan Status Depresi");
+
+  // Label sumbu Y
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -marginBox.left + 15)
+    .attr("x", -height / 2)
+    .attr("text-anchor", "middle")
+    .style("font-size", "12px")
+    .text("Jumlah Anak");
+
+  // Label sumbu X
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", height + marginBox.bottom - 10)
+    .attr("text-anchor", "middle")
+    .style("font-size", "12px")
+    .text("Status Depresi");
+
+  // Legenda
+  const legend = svg.selectAll(".legend")
+    .data(Object.entries(color))
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", (d, i) => `translate(0, ${i * 20})`);
+
+  legend.append("rect")
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", d => d[1]);
+
+  legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .style("font-size", "12px")
+    .text(d => d[0]);
+
   });
