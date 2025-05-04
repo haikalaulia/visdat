@@ -27,7 +27,6 @@ d3.csv("b_depressed.csv").then(data => {
   for (const [edu, marriedMap] of grouped.entries()) {
     for (const [married, counts] of marriedMap.entries()) {
       const labelGroup = `P${edu} - ${married === 1 ? "M" : "B"}`; 
-      // singkatan: P{level} - M(enikah)/B(elum)
       formatted.push(
         { group: labelGroup, kategori: "Depresi",      value: counts.Depresi },
         { group: labelGroup, kategori: "Tidak Depresi", value: counts.TidakDepresi }
@@ -35,15 +34,24 @@ d3.csv("b_depressed.csv").then(data => {
     }
   }
 
+  // Urutkan label berdasarkan angka di P{n}
+  const groups = Array.from(
+    new Set(formatted.map(d => d.group))
+  ).sort((a, b) => {
+    const ai = +a.match(/P(\d+)(?=\s*-)/)[1];
+    const bi = +b.match(/P(\d+)(?=\s*-)/)[1];
+    return ai - bi;
+  });
+
   // Ukuran & margin
   const svg    = d3.select("#socio-edu-marriage"),
         width  = +svg.attr("width"),
         height = +svg.attr("height"),
         margin = { top: 40, right: 30, bottom: 80, left: 60 };
 
-  // Skala X (dua level: x0 untuk group, x1 untuk kategori)
+  // Skala X
   const x0 = d3.scaleBand()
-    .domain([...new Set(formatted.map(d => d.group))])
+    .domain(groups)
     .range([margin.left, width - margin.right])
     .paddingInner(0.2);
 
@@ -77,7 +85,7 @@ d3.csv("b_depressed.csv").then(data => {
       .attr("height", d => y(0) - y(d.value))
       .attr("fill", d => color(d.kategori));
 
-  // Sumbu X dengan hover pada label
+  // Sumbu X dengan tooltip
   svg.append("g")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x0))
@@ -86,7 +94,6 @@ d3.csv("b_depressed.csv").then(data => {
       .style("text-anchor", "end")
       .style("cursor", "pointer")
       .on("mouseover", function(event, d) {
-        // d adalah isi tick (misal "P10 - M")
         tooltip
           .style("opacity", 1)
           .html(`<strong>${d}</strong>`)
@@ -102,7 +109,7 @@ d3.csv("b_depressed.csv").then(data => {
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(y));
 
-  // Legend utama: Depresi & Tidak Depresi
+  // Legend utama
   const legend = svg.append("g")
     .attr("transform", `translate(${width - margin.right - 150},${margin.top})`);
 
@@ -112,14 +119,14 @@ d3.csv("b_depressed.csv").then(data => {
     g.append("text").attr("x", 20).attr("y", 12).text(key);
   });
 
-  // Legend tambahan: singkatan P, M, B
+  // Legend tambahan: singkatan
   const legend2 = svg.append("g")
     .attr("transform", `translate(${width - margin.right - 150},${margin.top + 60})`);
 
   const legends = [
     { label: "P{n} = Pendidikan level n",   color: "#000" },
-    { label: "M = Menikah",                  color: "#000" },
-    { label: "B = Belum Menikah",            color: "#000" }
+    { label: "M = Menikah",                 color: "#000" },
+    { label: "B = Belum Menikah",           color: "#000" }
   ];
 
   legends.forEach((item, i) => {
@@ -137,21 +144,21 @@ d3.csv("b_depressed.csv").then(data => {
       .style("font-size", "12px")
       .text(item.label);
   });
+
   // Label Sumbu X
-svg.append("text")
-.attr("text-anchor", "middle")
-.attr("x", (width + margin.left - margin.right) / 2)
-.attr("y", height - 20)
-.style("font-size", "14px")
-.text("Tingkat Pendidikan & Status Pernikahan");
+  svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", (width + margin.left - margin.right) / 2)
+    .attr("y", height - 20)
+    .style("font-size", "14px")
+    .text("Tingkat Pendidikan & Status Pernikahan");
 
-// Label Sumbu Y
-svg.append("text")
-.attr("text-anchor", "middle")
-.attr("transform", `rotate(-90)`)
-.attr("x", -((height - margin.top - margin.bottom) / 2 + margin.top))
-.attr("y", 20)
-.style("font-size", "14px")
-.text("Jumlah Orang");
-
+  // Label Sumbu Y
+  svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", `rotate(-90)`)
+    .attr("x", -((height - margin.top - margin.bottom) / 2 + margin.top))
+    .attr("y", 20)
+    .style("font-size", "14px")
+    .text("Jumlah Orang");
 });
