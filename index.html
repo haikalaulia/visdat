@@ -58,12 +58,21 @@
   </section>
 
   <!-- 6. Scatter Plot Utang dan Aset -->
-  <section id="chart-debt-assets">
-    <h2>6. Bagaimana hubungan antara jumlah utang dan aset terhadap kondisi depresi?</h2>
-    <p>Scatter Plot Utang dan Aset vs Depresi</p>
-    <svg id="debt-assets" width="700" height="400"></svg>
-    <script src="js/debt-assets.js"></script>
-  </section>
+<section id="chart-debt-assets">
+  <h2>6. Bagaimana hubungan antara jumlah utang dan aset terhadap kondisi depresi?</h2>
+  <p>Scatter Plot Utang dan Aset vs Depresi</p>
+
+  <!-- Tambahkan tombol filter di sini -->
+  <div id="filter-buttons" style="margin-bottom: 10px;">
+    <button data-filter="all">Semua</button>
+    <button data-filter="depressed">Depresi</button>
+    <button data-filter="not-depressed">Tidak Depresi</button>
+  </div>
+
+  <svg id="debt-assets" width="700" height="400"></svg>
+  <script src="js/debt-assets.js"></script>
+</section>
+
 
   <!-- 7. Kekhawatiran terhadap Depresi -->
   <section id="chart-worry-depression">
