@@ -137,5 +137,21 @@ d3.csv("b_depressed.csv").then(data => {
       .style("font-size", "12px")
       .text(item.label);
   });
+  // Label Sumbu X
+svg.append("text")
+.attr("text-anchor", "middle")
+.attr("x", (width + margin.left - margin.right) / 2)
+.attr("y", height - 20)
+.style("font-size", "14px")
+.text("Tingkat Pendidikan & Status Pernikahan");
+
+// Label Sumbu Y
+svg.append("text")
+.attr("text-anchor", "middle")
+.attr("transform", `rotate(-90)`)
+.attr("x", -((height - margin.top - margin.bottom) / 2 + margin.top))
+.attr("y", 20)
+.style("font-size", "14px")
+.text("Jumlah Orang");
 
 });
