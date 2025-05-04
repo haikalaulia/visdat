@@ -53,7 +53,7 @@ d3.csv("b_depressed.csv", d3.autoType).then(data => {
   chart.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -chartHeight / 2)
-    .attr("y", -chartMargin.left + -70)
+    .attr("y", -80)
     .attr("text-anchor", "middle")
     .attr("fill", "#000")
     .text("Total Pengeluaran");
