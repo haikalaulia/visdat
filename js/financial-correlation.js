@@ -91,71 +91,83 @@ d3.csv("b_depressed.csv").then(data => {
     .attr("fill", "#333");
 
 
-  // ====== HEATMAP KORELASI ======
-  const svgHeat = d3.select("#heatmap"),
-        heatMargin = { top: 30, right: 20, bottom: 30, left: 80 },
-        heatWidth = +svgHeat.attr("width") - heatMargin.left - heatMargin.right,
-        heatHeight = +svgHeat.attr("height") - heatMargin.top - heatMargin.bottom;
+  // ====== HEATMAP KORELASI (improved) ======
+const svgHeat = d3.select("#heatmap"),
+heatMargin = { top: 60, right: 20, bottom: 60, left: 100 },
+heatWidth = +svgHeat.attr("width") - heatMargin.left - heatMargin.right,
+heatHeight = +svgHeat.attr("height") - heatMargin.top - heatMargin.bottom;
 
-  const gHeat = svgHeat.append("g")
-    .attr("transform", `translate(${heatMargin.left},${heatMargin.top})`);
+const gHeat = svgHeat.append("g")
+.attr("transform", `translate(${heatMargin.left},${heatMargin.top})`);
 
-  // Hitung korelasi antar variabel
-  const variables = ["incoming_agricultural", "farm_expenses", "depressed"];
+const variables = ["incoming_agricultural", "farm_expenses", "depressed"];
 
-  function correlation(x, y) {
-    const n = x.length;
-    const avgX = d3.mean(x), avgY = d3.mean(y);
-    const cov = d3.sum(x.map((d, i) => (d - avgX) * (y[i] - avgY))) / n;
-    const stdX = d3.deviation(x), stdY = d3.deviation(y);
-    return cov / (stdX * stdY);
-  }
+function correlation(x, y) {
+const n = x.length;
+const avgX = d3.mean(x), avgY = d3.mean(y);
+const cov = d3.sum(x.map((d, i) => (d - avgX) * (y[i] - avgY))) / n;
+const stdX = d3.deviation(x), stdY = d3.deviation(y);
+return cov / (stdX * stdY);
+}
 
-  const matrix = [];
-  variables.forEach((v1, i) => {
-    variables.forEach((v2, j) => {
-      const val = correlation(data.map(d => +d[v1]), data.map(d => +d[v2]));
-      matrix.push({ x: v1, y: v2, value: val });
-    });
-  });
+const matrix = [];
+variables.forEach((v1) => {
+variables.forEach((v2) => {
+const val = correlation(data.map(d => +d[v1]), data.map(d => +d[v2]));
+matrix.push({ x: v1, y: v2, value: val });
+});
+});
 
-  const xHeat = d3.scaleBand().range([0, heatWidth]).domain(variables).padding(0.05);
-  const yHeat = d3.scaleBand().range([0, heatHeight]).domain(variables).padding(0.05);
+const xHeat = d3.scaleBand().range([0, heatWidth]).domain(variables).padding(0.05);
+const yHeat = d3.scaleBand().range([0, heatHeight]).domain(variables).padding(0.05);
 
-  const colorScale = d3.scaleSequential()
-    .interpolator(d3.interpolateRdBu)
-    .domain([-1, 1]);
+const colorScale = d3.scaleSequential()
+.interpolator(d3.interpolateRdBu)
+.domain([1, -1]); // dibalik agar merah = korelasi negatif
 
-  gHeat.selectAll()
-    .data(matrix)
-    .enter()
-    .append("rect")
-    .attr("x", d => xHeat(d.x))
-    .attr("y", d => yHeat(d.y))
-    .attr("width", xHeat.bandwidth())
-    .attr("height", yHeat.bandwidth())
-    .style("fill", d => colorScale(d.value));
+// Kotak heatmap
+gHeat.selectAll("rect")
+.data(matrix)
+.enter()
+.append("rect")
+.attr("x", d => xHeat(d.x))
+.attr("y", d => yHeat(d.y))
+.attr("width", xHeat.bandwidth())
+.attr("height", yHeat.bandwidth())
+.style("fill", d => colorScale(d.value))
+.style("stroke", "#fff")
+.style("stroke-width", 1);
 
-  gHeat.selectAll()
-    .data(matrix)
-    .enter()
-    .append("text")
-    .attr("x", d => xHeat(d.x) + xHeat.bandwidth() / 2)
-    .attr("y", d => yHeat(d.y) + yHeat.bandwidth() / 2)
-    .attr("text-anchor", "middle")
-    .attr("alignment-baseline", "middle")
-    .attr("fill", "#000")
-    .text(d => d.value.toFixed(2));
+// Nilai korelasi
+gHeat.selectAll("text")
+.data(matrix)
+.enter()
+.append("text")
+.attr("x", d => xHeat(d.x) + xHeat.bandwidth() / 2)
+.attr("y", d => yHeat(d.y) + yHeat.bandwidth() / 2)
+.attr("text-anchor", "middle")
+.attr("alignment-baseline", "middle")
+.attr("fill", d => Math.abs(d.value) > 0.5 ? "#fff" : "#000")
+.attr("font-size", "14px")
+.text(d => d.value.toFixed(2));
 
-  gHeat.append("g").call(d3.axisTop(xHeat));
-  gHeat.append("g").call(d3.axisLeft(yHeat));
+// Axis
+gHeat.append("g")
+.call(d3.axisTop(xHeat).tickFormat(d => d.replace(/_/g, " ")))
+.selectAll("text")
+.attr("transform", "rotate(-45)")
+.style("text-anchor", "start");
 
-  // Judul Heatmap
-  svgHeat.append("text")
-    .attr("x", svgHeat.attr("width") / 2)
-    .attr("y", 20)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "16px")
-    .attr("fill", "#333")
-    .text("Matriks Korelasi (Pendapatan, Pengeluaran, Depresi)");
+gHeat.append("g")
+.call(d3.axisLeft(yHeat).tickFormat(d => d.replace(/_/g, " ")));
+
+// Judul
+svgHeat.append("text")
+.attr("x", svgHeat.attr("width") / 2)
+.attr("y", 25)
+.attr("text-anchor", "middle")
+.attr("font-size", "18px")
+.attr("font-weight", "bold")
+.attr("fill", "#333")
+.text("Matriks Korelasi Variabel");
 });
