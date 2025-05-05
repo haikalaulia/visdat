@@ -3,7 +3,7 @@ d3.csv("b_depressed.csv").then(data => {
   data.forEach(d => {
     d.incoming_agricultural = +d.incoming_agricultural;
     d.farm_expenses = +d.farm_expenses;
-    d.depression = +d.depression;
+    d.depressed = +d.depressed;
   });
 
   // ====== SCATTER PLOT ======
@@ -44,7 +44,7 @@ d3.csv("b_depressed.csv").then(data => {
     .attr("cx", d => x(d.incoming_agricultural))
     .attr("cy", d => y(d.farm_expenses))
     .attr("r", 4)
-    .attr("fill", d => color(d.depression))
+    .attr("fill", d => color(d.depressed))
     .attr("opacity", 0.7);
 
   // Label sumbu
@@ -101,7 +101,7 @@ d3.csv("b_depressed.csv").then(data => {
     .attr("transform", `translate(${heatMargin.left},${heatMargin.top})`);
 
   // Hitung korelasi antar variabel
-  const variables = ["incoming_agricultural", "farm_expenses", "depression_status"];
+  const variables = ["incoming_agricultural", "farm_expenses", "depressed"];
 
   function correlation(x, y) {
     const n = x.length;
